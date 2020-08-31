@@ -23,7 +23,7 @@ insert 'echo "hi!"' into 'hello.sh' after '#!sh\n'
 replace 'hello, world!' with 'hi, world!' inside 'hello.sh'
 git 'mv hello.sh hi.sh'
 
-create file('hello.log')
+create 'hello.log'
 git 'add hello.log'
 
 script {
@@ -38,15 +38,16 @@ script {
 
 ## Functions
 
-Function                                                      | Return Type | Example
--------                                                       | ------      | -------
-`file(String path)`                                           | `File`      | `file('hello.sh')`
-`dir(String path)`                                            | `Dir`       | `dir('foo')`
-`create(File file)`                                           | `File`      | `create file('hello.sh')`
-`create(Dir dir)`                                             | `File`      | `create dir('app')`
-`append(String text).to(String file)`                         | none        | `append 'echo "hi $1"' to 'hello.sh'`
-`prepend(String text).to(String file)`                        | none        | `prepend 'echo "hi $1"' to 'hello.sh'`
-`insert(String text).into(String file).after(String pattern)` | none        | `insert 'echo "hi!"' into 'hello.sh' after '#!sh\n'`
-`replace(String text).with(String text).inside(String file)`  | none        | `replace 'hello, world!' with 'hi, world!' inside 'hello.sh'`
-`git(String command)`                                         | none        | `git 'add hello.sh'`
-`script(Closure block)`                                       | none        | `script { println "System properties: ${args.split().findAll { it.startsWith('-D') }}"}`
+Function                                                      | Example
+-------                                                       | -------
+`file(String path)`                                           | `file('hello.sh')`
+`dir(String path)`                                            | `dir('foo')`
+`create(String file)`                                         | `create 'hello.sh'`
+`create(File file)`                                           | `create file('hello.sh')`
+`create(Dir dir)`                                             | `create dir('app')`
+`append(String text).to(String file)`                         | `append 'echo "hi $1"' to 'hello.sh'`
+`prepend(String text).to(String file)`                        | `prepend 'echo "hi $1"' to 'hello.sh'`
+`insert(String text).into(String file).after(String pattern)` | `insert 'echo "hi!"' into 'hello.sh' after '#!sh\n'`
+`replace(String text).with(String text).inside(String file)`  | `replace 'hello, world!' with 'hi, world!' inside 'hello.sh'`
+`git(String command)`                                         | `git 'add hello.sh'`
+`script(Closure block)`                                       | `script { println "System properties: ${args.split().findAll { it.startsWith('-D') }}"}`

@@ -47,22 +47,28 @@ abstract class RendrScript extends Script {
         action
     }
 
+    ScriptAction script(Closure block) {
+        script('Run script block', block)
+    }
+
     ScriptAction script(String name, Closure block) {
         def action = new ScriptAction(name: name, block: block)
         actions << action
         action
     }
 
-    ScriptAction script(Closure block) {
-        script('Run script block', block)
+    File create(String name) {
+        create(new File(name))
     }
 
-    def create(File file) {
+    File create(File file) {
         file.createNewFile()
+        file
     }
 
-    def create(Dir dir) {
+    Dir create(Dir dir) {
         dir.mkdirs()
+        dir
     }
 
     File file(path) {
