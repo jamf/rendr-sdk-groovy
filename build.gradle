@@ -2,6 +2,7 @@ plugins {
     id 'groovy'
     id 'java-library'
     id 'application'
+    id 'com.github.johnrengelman.shadow' version '6.0.0'
 }
 
 repositories {
