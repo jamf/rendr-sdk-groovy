@@ -47,6 +47,16 @@ abstract class RendrScript extends Script {
         action
     }
 
+    ScriptAction script(String name, Closure block) {
+        def action = new ScriptAction(name: name, block: block)
+        actions << action
+        action
+    }
+
+    ScriptAction script(Closure block) {
+        script('Run script block', block)
+    }
+
     def create(File file) {
         file.createNewFile()
     }
@@ -217,5 +227,20 @@ class GitAction extends Action {
 
     String toString() {
         "Run git $command"
+    }
+}
+
+class ScriptAction extends Action {
+    String name
+    Closure block
+
+    void run() {
+        block()
+    }
+
+    void validate() {}
+
+    String toString() {
+        name
     }
 }
