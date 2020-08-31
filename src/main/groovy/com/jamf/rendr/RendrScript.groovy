@@ -165,7 +165,7 @@ class AppendAction extends Action {
     File file
     String text
 
-    AppendAction on(file) {
+    AppendAction to(file) {
         this.file = new File(file)
         this
     }
@@ -187,7 +187,7 @@ class PrependAction extends Action {
     File file
     String text
 
-    PrependAction on(file) {
+    PrependAction to(file) {
         this.file = new File(file)
         this
     }
