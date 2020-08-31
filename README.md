@@ -14,6 +14,7 @@ number of DSL commands:
 * `insert` text in file
 * `replace` text in file
 * `git` commands
+* `script` for generic Groovy code
 
 Here is a sample script using these DSL commands:
 
@@ -24,6 +25,15 @@ git 'mv hello.sh hi.sh'
 
 create file('hello.log')
 git 'add hello.log'
+
+script {
+    files = []
+    dir('src').eachFileRecurse(FileType.FILES) { file ->
+        files << file
+    }
+    println "All files in src:"
+    files.sort().each { println it.path }
+}
 ```
 
 ## Functions
@@ -39,3 +49,4 @@ Function                                                      | Return Type | Ex
 `insert(String text).into(String file).after(String pattern)` | none        | `insert 'echo "hi!"' into 'hello.sh' after '#!sh\n'`
 `replace(String text).with(String text).inside(String file)`  | none        | `replace 'hello, world!' with 'hi, world!' inside 'hello.sh'`
 `git(String command)`                                         | none        | `git 'add hello.sh'`
+`script(Closure block)`                                       | none        | `script { println "System properties: ${args.split().findAll { it.startsWith('-D') }}"}`
