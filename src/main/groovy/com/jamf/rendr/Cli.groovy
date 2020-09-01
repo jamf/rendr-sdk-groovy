@@ -5,7 +5,12 @@ import org.codehaus.groovy.control.CompilerConfiguration
 class Cli {
     static void main(String[] args) {
         if (!args) {
-            die "Error: no parameters provided. Expected [script_path]"
+            die "Error: no parameters provided. Expected [script-path]"
+        }
+
+        if (args[0] in ['-h', '--help', 'help']) {
+            println "Usage:\n  rendr-sdk-groovy [script-path]"
+            System.exit(0)
         }
 
         def file = new File(args[0])

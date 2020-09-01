@@ -107,7 +107,7 @@ class RendrScriptSpec extends Specification {
         given:
         def f = new File(tmp, 'foo.txt')
         f.text = '42'
-        def script = """append '''\nfoo''' on '$f.path'"""
+        def script = """append '''\nfoo''' to '$f.path'"""
 
         when:
         def actions = shell.evaluate(script)
@@ -126,7 +126,7 @@ class RendrScriptSpec extends Specification {
         given:
         def f = new File(tmp, 'foo.txt')
         f.text = '42'
-        def script = "prepend '''foo\n''' on '$f.path'"
+        def script = "prepend '''foo\n''' to '$f.path'"
 
         when:
         def actions = shell.evaluate(script)
