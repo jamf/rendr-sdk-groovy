@@ -30,7 +30,8 @@ class Cli implements Callable<Integer> {
 
     Integer call() {
         try {
-            def binding = new Binding(values)
+            def context = values + [values: values]
+            def binding = new Binding(context)
             def compilerConfiguration = new CompilerConfiguration(scriptBaseClass: RendrScript.class.name)
             def shell = new GroovyShell(this.class.classLoader, binding, compilerConfiguration)
             shell.evaluate(script)

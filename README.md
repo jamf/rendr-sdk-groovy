@@ -4,6 +4,26 @@ _Library to enable scripting in Rendr blueprints_
 
 ## Usage
 
+### Running a script
+
+Check out the help text for details on usage:
+
+    ❯ rendr-sdk-groovy --help
+
+    Usage: rendr-sdk-groovy [-hsV] [-v=<key=value>]... <script>
+    A Groovy script runner for rendr
+          <script>              The script file to run.
+      -h, --help                Show this help message and exit.
+      -s, --stacktrace          Print stacktrace on error.
+      -v, --value=<key=value>   Value used in script (flag may be repeated).
+      -V, --version             Print version information and exit.
+
+Running a script looks like this:
+
+    rendr-sdk-groovy upgrade-v3.groovy --value name=foo --value version=42
+
+### Writing a script
+
 Blueprint authors can use this library to simplify creating scripts, especially
 for blueprint upgrades from one version to the next. The library provides a
 number of DSL commands:
@@ -20,8 +40,8 @@ Here is a sample script using these DSL commands:
 
 ```groovy
 insert 'echo "hi!"' into 'hello.sh' after '#!sh\n'
-replace 'hello, world!' with 'hi, world!' inside 'hello.sh'
-git 'mv hello.sh hi.sh'
+replace 'hello, world!' with "hello, $name!" inside 'hello.sh'  // references 'name' variable from values flag
+git "mv hello.sh ${values.name}.sh"  // this also references 'name', but this time from the 'values' map
 
 create 'hello.log'
 git 'add hello.log'
@@ -36,7 +56,7 @@ script {
 }
 ```
 
-## Functions
+### Available functions
 
 Function                                                      | Example
 -------                                                       | -------
