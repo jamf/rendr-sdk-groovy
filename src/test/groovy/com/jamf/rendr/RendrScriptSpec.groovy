@@ -18,6 +18,18 @@ class RendrScriptSpec extends Specification {
         shell = new GroovyShell(this.class.classLoader, binding, compilerConfiguration)
     }
 
+    def 'script can create file with text'() {
+        given:
+        def f = new File(tmp, 'foo.txt')
+        def script = "create '$f.path' write 'some text'"
+
+        when:
+        def result = shell.evaluate(script)
+
+        then:
+        f.text == 'some text'
+    }
+
     def 'script can append text into file'() {
         given:
         def f = new File(tmp, 'foo.txt')
