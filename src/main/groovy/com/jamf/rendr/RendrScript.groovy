@@ -66,6 +66,16 @@ abstract class RendrScript extends Script {
         file
     }
 
+    MoveAction move(String path) {
+        move(new File(path))
+    }
+
+    MoveAction move(File file) {
+        def action = new MoveAction(file: file)
+        actions << action
+        action
+    }
+
     Dir create(Dir dir) {
         dir.mkdirs()
         dir
@@ -139,7 +149,7 @@ class InsertAction extends Action {
     }
 
     void validate() {
-        file.exists() ?: toss("Insert failed: file '$file.name' does not exist")
+        file.exists() ?: toss("Insert failed: file '$file' does not exist")
         file.text.contains(after) ?: toss("Insert failed: file '$file.name' does not contain '${clean(after)}'")
     }
 
@@ -168,7 +178,7 @@ class ReplaceAction extends Action {
     }
 
     void validate() {
-        file.exists() ?: toss("Replace failed: file '$file.name' does not exist")
+        file.exists() ?: toss("Replace failed: file '$file' does not exist")
         // file.text ==~ ~/(m).*${pattern}.*/ ?: toss("Replace failed: file '$file.name' does not contain '${clean(pattern)}'")
     }
 
@@ -191,7 +201,7 @@ class AppendAction extends Action {
     }
 
     void validate() {
-        file.exists() ?: toss("Append failed: file '$file.name' does not exist")
+        file.exists() ?: toss("Append failed: file '$file' does not exist")
     }
 
     String toString() {
@@ -213,7 +223,7 @@ class PrependAction extends Action {
     }
 
     void validate() {
-        file.exists() ?: toss("Prepend failed: file '$file.name' does not exist")
+        file.exists() ?: toss("Prepend failed: file '$file' does not exist")
     }
 
     String toString() {
@@ -248,5 +258,27 @@ class ScriptAction extends Action {
 
     String toString() {
         name
+    }
+}
+
+class MoveAction extends Action {
+    File file
+    File target
+
+    MoveAction to(target) {
+        this.target = new File(target)
+        this
+    }
+
+    void run() {
+        file.renameTo(target)
+    }
+
+    void validate() {
+        file.exists() ?: toss("Move failed: file '$file' does not exist")
+    }
+
+    String toString() {
+        "Move $file to $target"
     }
 }

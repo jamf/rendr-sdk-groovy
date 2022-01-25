@@ -152,4 +152,21 @@ class RendrScriptSpec extends Specification {
         and:
         f.text == 'foo\n42'
     }
+
+    def 'move file to new directory'() {
+        given:
+        def f = new File(tmp, 'foo.txt')
+        f.text = '42'
+        def sub = new File(tmp, 'sub')
+        sub.mkdirs()
+        def script = "move '$f.path' to '$sub.path/foo.txt'"
+
+        when:
+        def actions = shell.evaluate(script)
+
+        then:
+        def moved = new File(tmp, 'sub/foo.txt')
+        moved.exists()
+        moved.text == '42'
+    }
 }

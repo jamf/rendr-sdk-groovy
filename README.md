@@ -29,6 +29,7 @@ for blueprint upgrades from one version to the next. The library provides a
 number of DSL commands:
 
 * `create` files or directories
+* `move` files or directories
 * `write` text to file
 * `append` text to file
 * `prepend` text to file
@@ -67,6 +68,7 @@ Function                                                      | Example
 `create(File file)`                                           | `create file('hello.sh')`
 `create(Dir dir)`                                             | `create dir('app')`
 `create(String file).write(String text)`                      | `create 'hello.sh' write 'echo hi'`
+`move(String file).to(String path)`                           | `move 'hello.sh' to 'foo/hello.sh'`
 `append(String text).to(String file)`                         | `append 'echo "hi $1"' to 'hello.sh'`
 `prepend(String text).to(String file)`                        | `prepend 'echo "hi $1"' to 'hello.sh'`
 `insert(String text).into(String file).after(String pattern)` | `insert 'echo "hi!"' into 'hello.sh' after '#!sh\n'`
