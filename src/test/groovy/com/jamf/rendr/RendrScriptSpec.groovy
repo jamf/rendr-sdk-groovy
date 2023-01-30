@@ -1,6 +1,7 @@
 package com.jamf.rendr
 
 import org.codehaus.groovy.control.CompilerConfiguration
+import org.intellij.lang.annotations.Language
 import spock.lang.Shared
 import spock.lang.Specification
 
@@ -18,13 +19,16 @@ class RendrScriptSpec extends Specification {
         shell = new GroovyShell(this.class.classLoader, binding, compilerConfiguration)
     }
 
+    List<Action> evaluate(@Language('groovy') String script) {
+        shell.evaluate(script) as List<Action>
+    }
+
     def 'script can create file with text'() {
         given:
         def f = new File(tmp, 'foo.txt')
-        def script = "create '$f.path' write 'some text'"
 
         when:
-        def result = shell.evaluate(script)
+        evaluate("create '$f.path' write 'some text'")
 
         then:
         f.text == 'some text'
@@ -33,10 +37,9 @@ class RendrScriptSpec extends Specification {
     def 'script can append text into file'() {
         given:
         def f = new File(tmp, 'foo.txt')
-        def script = "file '$f.path' append 'some text'"
 
         when:
-        def result = shell.evaluate(script)
+        evaluate("file '$f.path' append 'some text'")
 
         then:
         f.text.endsWith 'some text'
@@ -46,16 +49,15 @@ class RendrScriptSpec extends Specification {
         given:
         def f = new File(tmp, 'foo.txt')
         f.text = 'abc\n123'
-        def script = """insert '''\nfoo''' into '$f.path' after 'abc' """
 
         when:
-        def actions = shell.evaluate(script)
+        def actions = evaluate("""insert '''\nfoo''' into '$f.path' after 'abc' """)
 
         then:
         actions.size() == 1
 
-        def action = actions.first()
-        action instanceof InsertAction
+        actions.first() instanceof InsertAction
+        def action = actions.first() as InsertAction
         action.text == '\nfoo'
         action.file == f
         action.after == 'abc'
@@ -68,16 +70,15 @@ class RendrScriptSpec extends Specification {
         given:
         def f = new File(tmp, 'foo.txt')
         f.text = 'abc\n123'
-        def script = """replace 'abc' with 'foo' inside '$f.path' """
 
         when:
-        def actions = shell.evaluate(script)
+        def actions = evaluate("""replace 'abc' with 'foo' inside '$f.path' """)
 
         then:
         actions.size() == 1
 
-        def action = actions.first()
-        action instanceof ReplaceAction
+        actions.first() instanceof ReplaceAction
+        def action = actions.first() as ReplaceAction
         action.file == f
         action.pattern == 'abc'
         action.text == 'foo'
@@ -92,20 +93,19 @@ class RendrScriptSpec extends Specification {
         repoDir.mkdirs()
         def f = new File(repoDir, 'foo.txt')
         f.text = 'foo'
-        def script = "git 'init'; git 'add .'"
 
         when:
-        def actions = shell.evaluate(script)
+        def actions = evaluate("git 'init'; git 'add .'")
 
         then:
         actions.size() == 2
 
-        def g1 = actions.first()
-        g1 instanceof GitAction
+        actions.first() instanceof GitAction
+        def g1 = actions.first() as GitAction
         g1.command == 'init'
 
-        def g2 = actions.last()
-        g2 instanceof GitAction
+        actions.last() instanceof GitAction
+        def g2 = actions.last() as GitAction
         g2.command == 'add .'
 
         and:
@@ -119,14 +119,13 @@ class RendrScriptSpec extends Specification {
         given:
         def f = new File(tmp, 'foo.txt')
         f.text = '42'
-        def script = """append '''\nfoo''' to '$f.path'"""
 
         when:
-        def actions = shell.evaluate(script)
+        def actions = evaluate("""append '''\nfoo''' to '$f.path'""")
 
         then:
-        def action = actions.first()
-        action instanceof AppendAction
+        actions.first() instanceof AppendAction
+        def action = actions.first() as AppendAction
         action.file == f
         action.text == '\nfoo'
 
@@ -138,14 +137,13 @@ class RendrScriptSpec extends Specification {
         given:
         def f = new File(tmp, 'foo.txt')
         f.text = '42'
-        def script = "prepend '''foo\n''' to '$f.path'"
 
         when:
-        def actions = shell.evaluate(script)
+        def actions = evaluate("prepend '''foo\n''' to '$f.path'")
 
         then:
-        def action = actions.first()
-        action instanceof PrependAction
+        actions.first() instanceof PrependAction
+        def action = actions.first() as PrependAction
         action.file == f
         action.text == 'foo\n'
 
@@ -159,10 +157,9 @@ class RendrScriptSpec extends Specification {
         f.text = '42'
         def sub = new File(tmp, 'sub')
         sub.mkdirs()
-        def script = "move '$f.path' to '$sub.path/foo.txt'"
 
         when:
-        def actions = shell.evaluate(script)
+        evaluate("move '$f.path' to '$sub.path/foo.txt'")
 
         then:
         def moved = new File(tmp, 'sub/foo.txt')

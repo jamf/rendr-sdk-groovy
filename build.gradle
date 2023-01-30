@@ -13,10 +13,16 @@ dependencies {
     implementation 'org.codehaus.groovy:groovy-all:3.0.5'
     implementation 'info.picocli:picocli:4.5.1'
 
-    testImplementation 'org.spockframework:spock-core:2.0-M3-groovy-3.0'
+    testImplementation 'org.spockframework:spock-core:2.3-groovy-3.0'
+    testImplementation 'org.jetbrains:annotations:23.0.0'
 }
 
 mainClassName = 'com.jamf.rendr.Cli'
+
+java {
+    withSourcesJar()
+    withJavadocJar()
+}
 
 test {
     useJUnitPlatform()
